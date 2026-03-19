@@ -44,4 +44,18 @@ public class GlobalErrorHandler {
 
         return Mono.just(ResponseEntity.status(HttpStatus.NOT_FOUND).body(error));
     }
+
+    // Handles duplicate resource errors
+    @ExceptionHandler(IllegalArgumentException.class)
+    public Mono<ResponseEntity<Map<String, Object>>> handleIllegalArgument(
+            IllegalArgumentException ex) {
+
+        Map<String, Object> error = Map.of(
+                "timestamp", LocalDateTime.now(),
+                "status", HttpStatus.CONFLICT.value(),
+                "message", ex.getMessage()
+        );
+
+        return Mono.just(ResponseEntity.status(HttpStatus.CONFLICT).body(error));
+    }
 }

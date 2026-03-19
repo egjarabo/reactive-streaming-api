@@ -17,6 +17,9 @@ spring:
   flyway:
     enabled: true
     locations: classpath:db/migration
+    url: jdbc:postgresql://localhost:5432/streaming
+    user: ${DB_USERNAME:streaming}
+    password: ${DB_PASSWORD:streaming}
 
 server:
   port: 8080
