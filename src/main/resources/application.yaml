@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: reactive-streaming-api
+
+  # Conexión reactiva — la usa la app (WebFlux + R2DBC)
+  r2dbc:
+    url: r2dbc:postgresql://localhost:5432/streaming
+    username: ${DB_USERNAME:streaming}
+    password: ${DB_PASSWORD:streaming}
+
+  # Conexión JDBC — solo la usa Flyway para las migraciones
+  datasource:
+    url: jdbc:postgresql://localhost:5432/streaming
+    username: ${DB_USERNAME:streaming}
+    password: ${DB_PASSWORD:streaming}
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    url: jdbc:postgresql://localhost:5432/streaming
+    user: ${DB_USERNAME:streaming}
+    password: ${DB_PASSWORD:streaming}
+
+server:
+  port: 8080
