@@ -13,15 +13,20 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalErrorHandler {
 
+    private static final String TIMESTAMP = "timestamp";
+    private static final String STATUS = "status";
+    private static final String MESSAGE = "message";
+    private static final String ERRORS = "errors";
+
     // Handles validation errors (@Valid failures)
     @ExceptionHandler(WebExchangeBindException.class)
     public Mono<ResponseEntity<Map<String, Object>>> handleValidationErrors(
             WebExchangeBindException ex) {
 
         Map<String, Object> error = Map.of(
-                "timestamp", LocalDateTime.now(),
-                "status", HttpStatus.BAD_REQUEST.value(),
-                "errors", ex.getBindingResult()
+                TIMESTAMP, LocalDateTime.now(),
+                STATUS, HttpStatus.BAD_REQUEST.value(),
+                ERRORS, ex.getBindingResult()
                         .getFieldErrors()
                         .stream()
                         .map(e -> e.getField() + ": " + e.getDefaultMessage())
@@ -37,9 +42,9 @@ public class GlobalErrorHandler {
             ResourceNotFoundException ex) {
 
         Map<String, Object> error = Map.of(
-                "timestamp", LocalDateTime.now(),
-                "status", HttpStatus.NOT_FOUND.value(),
-                "message", ex.getMessage()
+                TIMESTAMP, LocalDateTime.now(),
+                STATUS, HttpStatus.NOT_FOUND.value(),
+                MESSAGE, ex.getMessage()
         );
 
         return Mono.just(ResponseEntity.status(HttpStatus.NOT_FOUND).body(error));
@@ -51,9 +56,9 @@ public class GlobalErrorHandler {
             IllegalArgumentException ex) {
 
         Map<String, Object> error = Map.of(
-                "timestamp", LocalDateTime.now(),
-                "status", HttpStatus.CONFLICT.value(),
-                "message", ex.getMessage()
+                TIMESTAMP, LocalDateTime.now(),
+                STATUS, HttpStatus.CONFLICT.value(),
+                MESSAGE, ex.getMessage()
         );
 
         return Mono.just(ResponseEntity.status(HttpStatus.CONFLICT).body(error));

@@ -16,6 +16,8 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
 
+    private static final String PRODUCT = "Product";
+
     // Returns all products
     public Flux<ProductResponse> findAll() {
         return productRepository.findAll()
@@ -33,7 +35,7 @@ public class ProductService {
     // Returns a product by id or throws ResourceNotFoundException
     public Mono<ProductResponse> findById(Long id) {
         return productRepository.findById(id)
-                .switchIfEmpty(Mono.error(new ResourceNotFoundException("Product", id)))
+                .switchIfEmpty(Mono.error(new ResourceNotFoundException(PRODUCT, id)))
                 .map(ProductResponse::from);
     }
 
@@ -62,7 +64,7 @@ public class ProductService {
     // Updates stock for a product
     public Mono<ProductResponse> updateStock(Long id, Integer stock) {
         return productRepository.findById(id)
-                .switchIfEmpty(Mono.error(new ResourceNotFoundException("Product", id)))
+                .switchIfEmpty(Mono.error(new ResourceNotFoundException(PRODUCT, id)))
                 .flatMap(product -> {
                     product.setStock(stock);
                     return productRepository.save(product);
@@ -73,7 +75,7 @@ public class ProductService {
     // Deletes a product by id or throws ResourceNotFoundException
     public Mono<Void> delete(Long id) {
         return productRepository.findById(id)
-                .switchIfEmpty(Mono.error(new ResourceNotFoundException("Product", id)))
+                .switchIfEmpty(Mono.error(new ResourceNotFoundException(PRODUCT, id)))
                 .flatMap(product -> productRepository.delete(product));
     }
 }

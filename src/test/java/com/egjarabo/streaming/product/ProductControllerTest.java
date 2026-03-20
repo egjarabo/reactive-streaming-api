@@ -12,6 +12,7 @@ import org.springframework.http.MediaType;
 
 import java.math.BigDecimal;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ProductControllerTest extends AbstractIntegrationTest {
@@ -162,7 +163,7 @@ class ProductControllerTest extends AbstractIntegrationTest {
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(ProductResponse.class)
-                .value(response -> assertTrue (response.stock() == 25));
+                .value(response -> assertEquals (25, response.stock()));
     }
 
     @Test
